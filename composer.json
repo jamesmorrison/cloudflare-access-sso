@@ -1,0 +1,30 @@
+{
+  "name": "jamesmorrison/cloudflare-access-sso",
+  "description": "Facilitates SSO login to WordPress via Cloudflare Access.",
+  "version": "0.1.0",
+  "type": "wordpress-plugin",
+  "homepage": "https://james.morrison.uk/plugins/cloudflare-access-sso/",
+  "readme": "./readme.md",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "James Morrison",
+      "homepage": "https://james.morrison.uk",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/jamesmorrison/cloudflare-access-sso",
+    "issues": "https://github.com/jamesmorrison/cloudflare-access-sso/issues",
+    "docs": "https://github.com/jamesmorrison/cloudflare-access-sso/#readme"
+  },
+  "require": {
+    "php": ">=8.0",
+    "firebase/php-jwt": "^6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "CloudflareAccessSSO\\": "includes/classes/"
+    }
+  }
+}
