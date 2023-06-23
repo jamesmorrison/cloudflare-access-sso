@@ -6,7 +6,7 @@ Cloudflare Access SSO (Single Sign On) is a plugin to facilitate auto-login to W
 
 ### Cloudflare Access Setup
 
-In order to use Cloudflare Access for SSO, you must create an application that covers `wp-login.php` on the site you wish to protect. No other URLs are required to be protected for this to function, but for better security you may wish to include others. Note that (as of 27th February, 2023) it is not possible to define more than one path in a single application; for now multiple applications are required if you additionally wish to protect `/wp-admin`.
+In order to use Cloudflare Access for SSO, you must create an application that covers `wp-login.php` on the site you wish to protect. No other URLs are required to be protected for this to function, but for better security you may wish to include others. Note that (as of June, 2023) it is not possible to define more than one path in a single application; for now multiple applications are required if you additionally wish to protect `/wp-admin`.
 
 Follow this guide to create a [Cloudflare Access Application: Self Hosted Applications](https://developers.cloudflare.com/cloudflare-one/applications/configure-apps/self-hosted-apps/)
 
@@ -34,6 +34,17 @@ To get the Application Audience (AUD) Tag
 Example for `wp-config.php`: `define( 'CF_ACCESS_AUD', '12345-67890-12345-67890-12345-67890' );`
 
 > Note: If you have multiple Cloudflare Access Applications, ensure the AUD covers `wp-login.php` - if it doesn't, SSO will not function correctly.
+
+`CF_ACCESS_AUD` accepts a single string (per example above) or an array of strings, like this:
+
+```
+define( 'CF_ACCESS_AUD',
+	[
+		'12345-67890-12345-67890-12345-67890',
+		'54321-12345-54321-12345-54321-12345',
+	]
+);
+```
 
 Optionally, two additional constants can also be set:
 
