@@ -94,7 +94,7 @@ class Plugin {
 				JWT::$leeway = CF_ACCESS_LEEWAY;
 				$jwt_decoded = JWT::decode( $authorisation_header, JWK::parseKeySet( $certificates ), array( 'RS256' ) );
 
-				if ( isset( $jwt_decoded->email ) && isset( $jwt_decoded->aud ) && $this->verify_aud( $jwt_decoded->aud ) ) {
+				if ( isset( $jwt_decoded->email ) && isset( $jwt_decoded->aud ) && isset( $jwt_decoded->aud[0] ) && $this->verify_aud( $jwt_decoded->aud[0] ) ) {
 					$user = get_user_by( 'email', $jwt_decoded->email );
 
 					// If a matching user is found, facilitate log in.
@@ -180,8 +180,8 @@ class Plugin {
 	 * @return bool
 	 */
 	protected function verify_aud( $aud ) {
-		if ( is_array( $aud ) ) {
-				return in_array( CF_ACCESS_AUD, $aud, true );
+		if ( is_array( CF_ACCESS_AUD ) ) {
+			return in_array( $aud, CF_ACCESS_AUD, true );
 		} elseif ( is_string( $aud ) ) {
 				return CF_ACCESS_AUD === $aud;
 		}
