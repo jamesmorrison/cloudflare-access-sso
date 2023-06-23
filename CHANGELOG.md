@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](http://keepachangelog.com/), and will adhere to [Semantic Versioning](http://semver.org/).
 
+## [1.0.2] - 2023-06-23
+- Corrected version number throughout to 1.0.2. 🎉
+
+## [1.0.1] - 2023-06-23
+- Added example of multiple AUD's to README. 🎉
+
 ## [1.0.0] - 2023-06-23
 - Updates and enhancements to documentation. 🎉
 
