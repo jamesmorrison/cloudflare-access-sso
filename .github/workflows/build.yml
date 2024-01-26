@@ -35,7 +35,7 @@ jobs:
       run: rm .gitignore .editorconfig composer.json composer.lock phpcs.xml
 
     - name: Store built files as artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: cloudflare-access-sso
         path: .
