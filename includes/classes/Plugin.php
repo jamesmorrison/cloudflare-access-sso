@@ -62,10 +62,10 @@ class Plugin {
 	 */
 	public function setup() {
 		// Process SSO login on the 1st hook available on the login page.
-		add_action( 'login_head', [ $this, 'process_login' ] );
+		add_action( 'login_head', array( $this, 'process_login' ) );
 
 		// Logout from Cloudflare Access once WP logout is complete.
-		add_filter( 'logout_redirect', [ $this, 'set_cloudflare_access_logout_url' ], 10, 3 );
+		add_filter( 'logout_redirect', array( $this, 'set_cloudflare_access_logout_url' ), 10, 3 );
 	}
 
 	/**
@@ -100,12 +100,12 @@ class Plugin {
 					// If a matching user is not found and create an account
 					if ( ! is_a( $user, '\WP_User' ) && CF_ACCESS_CREATE_ACCOUNT ?? false ) {
 						$user_id = wp_insert_user(
-							[
+							array(
 								'user_login' => $jwt->email,
 								'user_email' => $jwt->email,
 								'user_pass'  => wp_generate_password( 128, true, true ),
 								'role'       => $this->validate_new_user_role( CF_ACCESS_NEW_USER_ROLE ) ?? 'subscriber',
-							]
+							)
 						);
 
 						if ( ! is_wp_error( $user_id ) ) {

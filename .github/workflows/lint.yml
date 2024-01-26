@@ -22,4 +22,4 @@ jobs:
     - name: composer install
       run: composer install
     - name: PHPCS check
-      run: ./vendor/bin/phpcs --standard=WordPress-Extra .
+      run: ./vendor/bin/phpcs --standard=WordPress-Extra --ignore=vendor .

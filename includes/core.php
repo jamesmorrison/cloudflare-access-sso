@@ -13,8 +13,8 @@ namespace CloudflareAccessSSO\Core;
  * @return void
  */
 function setup() {
-	$n = function( $function ) {
-		return __NAMESPACE__ . "\\$function";
+	$n = function ( $_fn ) {
+		return __NAMESPACE__ . "\\$_fn";
 	};
 
 	add_action( 'init', $n( 'i18n' ) );
