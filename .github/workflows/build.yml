@@ -37,7 +37,7 @@ jobs:
     - name: Store built files as artifact
       uses: actions/upload-artifact@v2
       with:
-        name: artifact
+        name: cloudflare-access-sso
         path: .
         if-no-files-found: error
         retention-days: 7
