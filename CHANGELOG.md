@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](http://keepachangelog.com/), and will adhere to [Semantic Versioning](http://semver.org/).
 
+## [1.0.3] - 2024-01-26
+- Fixed composer dependencies issue; returns error if the plugin needs `composer install` run 🎉
+- Added `cloudflare_access_sso_plugin_pre_init` hook (prior to plugin loading) 🎉
+- Corrected minor PHPCS compatibility issues (PHP 8.2) and added coding standards (WordPress-Extra) 🎉
+
 ## [1.0.2] - 2023-06-23
 - Corrected version number throughout to 1.0.2. 🎉
 

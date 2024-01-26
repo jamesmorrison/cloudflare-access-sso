@@ -78,7 +78,6 @@ class Plugin {
 		$certificates         = $this->get_cloudflare_certificates();
 		$login_attempts       = 0;
 		$user                 = false;
-		$user_id              = 0;
 
 		// On cache error, force update the certificates
 		if ( is_wp_error( $certificates ) ) {
@@ -92,10 +91,11 @@ class Plugin {
 		while ( $login_attempts < CF_ACCESS_ATTEMPTS ) {
 			try {
 				JWT::$leeway = CF_ACCESS_LEEWAY;
-				$jwt_decoded = JWT::decode( $authorisation_header, JWK::parseKeySet( $certificates ), array( 'RS256' ) );
 
-				if ( isset( $jwt_decoded->email ) && isset( $jwt_decoded->aud ) && isset( $jwt_decoded->aud[0] ) && $this->verify_aud( $jwt_decoded->aud[0] ) ) {
-					$user = get_user_by( 'email', $jwt_decoded->email );
+				$jwt = JWT::decode( $authorisation_header, JWK::parseKeySet( $certificates ) );
+
+				if ( $this->validate_jwt( $jwt ) ) {
+					$user = get_user_by( 'email', $jwt->email );
 
 					// If a matching user is found, facilitate log in.
 					if ( is_a( $user, '\WP_User' ) ) {
@@ -111,7 +111,7 @@ class Plugin {
 				$certificates = $this->get_cloudflare_certificates( true );
 			}
 
-			$login_attempts ++;
+			++$login_attempts;
 		}
 	}
 
@@ -175,6 +175,34 @@ class Plugin {
 	}
 
 	/**
+	 * Get Cloudflare Certificates Last Updated
+	 *
+	 * @return int
+	 */
+	protected function get_cloudflare_certificates_last_updated() {
+		return wp_cache_get( 'cf_access_sso_certficates_last_updated', self::$cache_group );
+	}
+
+	/**
+	 * Get Cloudflare Certificates Next Update
+	 *
+	 * @return int
+	 */
+	protected function get_cloudflare_certificates_next_update() {
+		return $this->get_cloudflare_certificates_last_updated() + ( 7 * DAY_IN_SECONDS );
+	}
+
+	/**
+	 * Validate JWT
+	 *
+	 * @param object $jwt The JWT to validate.
+	 * @return bool
+	 */
+	protected function validate_jwt( $jwt ) {
+		return isset( $jwt->email ) && isset( $jwt->aud ) && isset( $jwt->aud[0] ) && $this->verify_aud( $jwt->aud[0] );
+	}
+
+	/**
 	 * Verify AUD
 	 *
 	 * @return bool
@@ -187,5 +215,4 @@ class Plugin {
 		}
 		return false;
 	}
-
 }

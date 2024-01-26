@@ -10,7 +10,7 @@
  *
  * Plugin Name: Cloudflare Access SSO
  * Description: Facilitates automatic login to WordPress when domain is protected with Cloudflare Access
- * Version:     1.0.2
+ * Version:     1.0.3
  * Plugin URI:  https://github.com/jamesmorrison/cloudflare-access-sso
  * Author:      James Morrison
  * Author URI:  https://jamesmorrison.uk/
@@ -56,17 +56,21 @@ if ( ! defined( 'CF_ACCESS_LEEWAY' ) ) {
 }
 
 // Useful global constants
-define( 'CLOUDFLARE_ACCESS_SSO_PLUGIN_VERSION', '1.0.2' );
+define( 'CLOUDFLARE_ACCESS_SSO_PLUGIN_VERSION', '1.0.3' );
 define( 'CLOUDFLARE_ACCESS_SSO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CLOUDFLARE_ACCESS_SSO_PLUGIN_INC', CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH . 'includes/' );
 
-// Require Composer autoloader if it exists
-if ( file_exists( CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH . 'vendor/autoload.php' ) ) {
-	require_once CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH . 'vendor/autoload.php';
+// Load plugin classes
+if ( ! file_exists( CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH . 'vendor/autoload.php' ) ) {
+	error_log( 'Cloudflare Access SSO Error: Composer dependencies are missing. Please run `composer install` in the plugin directory.' ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+	return;
 }
 
-// Include files
+// Load composer dependencies
+require_once CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH . 'vendor/autoload.php';
+
+// Load plugin files
 require_once CLOUDFLARE_ACCESS_SSO_PLUGIN_INC . '/core.php';
 
 // Activation / Deactivation

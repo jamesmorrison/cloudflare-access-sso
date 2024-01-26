@@ -41,6 +41,8 @@ function i18n() {
  */
 function init() {
 
+	do_action( 'cloudflare_access_sso_plugin_pre_init' );
+
 	if ( class_exists( '\CloudflareAccessSSO\Plugin' ) ) {
 		\CloudflareAccessSSO\Plugin::get_instance()->setup();
 	}
@@ -64,6 +66,6 @@ function activate() {
  * @return void
  */
 function deactivate() {
-	// Flush cache to remove Cloudflare Certificates
+	// Flushing the cache removes stored Cloudflare Certificates
 	wp_cache_flush();
 }
