@@ -1,0 +1,39 @@
+name: Deploy to WP.org
+on:
+  push:
+    branches:
+      - trunk
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer:v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Run Build Process
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Remove .github folder
+      run: rm -rf .github
+
+    - name: Remove development files
+      run: rm .gitignore .editorconfig composer.json composer.lock phpcs.xml
+
+    - name: WordPress Plugin Deploy
+      uses: 10up/action-wordpress-plugin-deploy@v2
+      env:
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        SLUG: cloudflare-access-sso

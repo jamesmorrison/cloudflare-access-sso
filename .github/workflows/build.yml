@@ -1,0 +1,43 @@
+name: Run Build Process
+on:
+  pull_request:
+    branches:
+      - trunk
+  push:
+    branches:
+      - trunk
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer:v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Run Build Process
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Remove .github folder
+      run: rm -rf .github
+
+    - name: Remove development files
+      run: rm .gitignore .editorconfig composer.json composer.lock phpcs.xml
+
+    - name: Store built files as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cloudflare-access-sso
+        path: .
+        if-no-files-found: error
+        retention-days: 7
