@@ -31,7 +31,7 @@ function setup() {
 function i18n() {
 	$locale = apply_filters( 'plugin_locale', get_locale(), 'cloudflare-access-sso' );
 	load_textdomain( 'cloudflare-access-sso', WP_LANG_DIR . '/cloudflare-access-sso/cloudflare-access-sso-' . $locale . '.mo' );
-	load_plugin_textdomain( 'cloudflare-access-sso', false, plugin_basename( CLOUDFLARE_ACCESS_SSO_PLUGIN_PATH ) . '/languages/' );
+	load_plugin_textdomain( 'cloudflare-access-sso', false, plugin_basename( CF_ACCESS_SSO_PLUGIN_PATH ) . '/languages/' );
 }
 
 /**

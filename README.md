@@ -46,7 +46,7 @@ define( 'CF_ACCESS_AUD',
 );
 ```
 
-Optionally, two additional constants can also be set:
+Optionally, four additional constants can also be set:
 
 `CF_ACCESS_ATTEMPTS` The number of attempts to login via Cloudflare Access.
 
@@ -56,7 +56,16 @@ Default: (int) `3` if not set.
 
 Default (int) `60` if not set.
 
-> **Note:** Where the application is not configured correctly (authorisation header is not set, or the team name / AUD are incorrect), SSO is silently disabled. You can check the cookies section of inspector tools to confirm whether the cookie has been set.
+`CF_ACCESS_CREATE_ACCOUNT` Whether an account should be created for a (Cloudflare) authenticated user if it doesn't exist
+Note: This is dependent on the settings for your Cloudflare Access application; if you only allow "internal" users, "external" users won't be able to access the site at all.
+
+Default: (bool) `false` if not set.
+
+`CF_ACCESS_NEW_USER_ROLE` The role for user accounts created. Requires `CF_ACCESS_CREATE_ACCOUNT` to be true (is otherwise ignored).
+
+Default: (string) `subscriber`
+
+> **Note:** Where the application is not configured correctly (authorisation header is not set, or the team name / AUD are incorrect), SSO is **silently disabled**. You can check the cookies section of inspector tools to confirm whether the cookie has been set.
 
 ### Disclaimer
 This plugin is not affiliated with nor developed by Cloudflare. All trademarks, service marks and company names are the property of their respective owners.

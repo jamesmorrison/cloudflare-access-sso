@@ -62,10 +62,10 @@ class Plugin {
 	 */
 	public function setup() {
 		// Process SSO login on the 1st hook available on the login page.
-		add_action( 'login_head', array( $this, 'process_login' ) );
+		add_action( 'login_head', [ $this, 'process_login' ] );
 
 		// Logout from Cloudflare Access once WP logout is complete.
-		add_filter( 'logout_redirect', array( $this, 'set_cloudflare_access_logout_url' ), 10, 3 );
+		add_filter( 'logout_redirect', [ $this, 'set_cloudflare_access_logout_url' ], 10, 3 );
 	}
 
 	/**
@@ -97,8 +97,39 @@ class Plugin {
 				if ( $this->validate_jwt( $jwt ) ) {
 					$user = get_user_by( 'email', $jwt->email );
 
+					// If a matching user is not found and create an account
+					if ( ! is_a( $user, '\WP_User' ) && CF_ACCESS_CREATE_ACCOUNT ?? false ) {
+						$user_id = wp_insert_user(
+							[
+								'user_login' => $jwt->email,
+								'user_email' => $jwt->email,
+								'user_pass'  => wp_generate_password( 128, true, true ),
+								'role'       => $this->validate_new_user_role( CF_ACCESS_NEW_USER_ROLE ) ?? 'subscriber',
+							]
+						);
+
+						if ( ! is_wp_error( $user_id ) ) {
+							$user = get_user_by( 'id', $user_id );
+
+							// Add user meta to indicate that the user was created by Cloudflare Access SSO.
+							update_user_meta( $user_id, 'cf_access_sso_created', true );
+							update_user_meta( $user_id, 'cf_access_sso_created_at', time() );
+						}
+					}
+
 					// If a matching user is found, facilitate log in.
 					if ( is_a( $user, '\WP_User' ) ) {
+						// If there is no meta for cf_access_sso_enabled, then this is the first login.
+						// Add user meta to identify when Clouflare Access SSO was enabled.
+						// This may be used in a future release to prevent typical username / password access.
+						if ( ! get_user_meta( $user->ID, 'cf_access_sso_enabled', true ) ) {
+							update_user_meta( $user->ID, 'cf_access_sso_enabled', true );
+							update_user_meta( $user->ID, 'cf_access_sso_enabled_at', time() );
+						}
+
+						// Set the last login time.
+						update_user_meta( $user_id, 'cf_access_sso_last_login', time() );
+
 						wp_set_auth_cookie( $user->ID );
 						wp_set_current_user( $user->ID );
 						do_action( 'wp_login', $user->name, $user );
@@ -119,12 +150,12 @@ class Plugin {
 	 * Set Cloudflare Access Logout URL
 	 *
 	 * @param string  $redirect_to           The redirect destination URL.
-	 * @param string  $requested_redirect_to The requested redirect destination URL passed as a parameter.
-	 * @param WP_User $user                  The WP_User object for the user that's logging out.
+	 * @param string  $requested_redirect_to The requested redirect destination URL (passed as a query parameter).
+	 * @param WP_User $user                  The WP_User object for the user who has logged out.
 	 *
 	 * @return string Logout URL.
 	 */
-	public function set_cloudflare_access_logout_url( $redirect_to, $requested_redirect_to, $user ) {
+	public function set_cloudflare_access_logout_url( $redirect_to, $requested_redirect_to, $user ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 		// Set the redirect URL to logout from Cloudflare Access - but only where the authorisation header exists.
 		if ( $this->get_authorisation_header() ) {
 			return esc_url( home_url( '/cdn-cgi/access/logout' ) );
@@ -158,14 +189,14 @@ class Plugin {
 	 * @return array|\WP_Error
 	 */
 	protected function get_cloudflare_certificates( $force = false ) {
-		$certificates = wp_cache_get( 'cf_access_sso_certficates', self::$cache_group );
+		$certificates = wp_cache_get( 'cf_access_certficates', self::$cache_group );
 
 		if ( ! $certificates || $force ) {
 			try {
 				$response     = wp_remote_get( esc_url( self::$cloudflare_api_url ) );
 				$certificates = json_decode( wp_remote_retrieve_body( $response ), true );
-				wp_cache_set( 'cf_access_sso_certficates', $certificates, self::$cache_group, 7 * DAY_IN_SECONDS );
-				wp_cache_set( 'cf_access_sso_certficates_last_updated', time(), self::$cache_group, 30 * DAY_IN_SECONDS );
+				wp_cache_set( 'cf_access_certficates', $certificates, self::$cache_group, 7 * DAY_IN_SECONDS );
+				wp_cache_set( 'cf_access_certficates_last_updated', time(), self::$cache_group, 30 * DAY_IN_SECONDS );
 			} catch ( \Exception $e ) {
 				return new WP_Error( 'cf_access_sso_certificates_error', $e->getMessage(), self::$cloudflare_api_url );
 			}
@@ -180,7 +211,7 @@ class Plugin {
 	 * @return int
 	 */
 	protected function get_cloudflare_certificates_last_updated() {
-		return wp_cache_get( 'cf_access_sso_certficates_last_updated', self::$cache_group );
+		return wp_cache_get( 'cf_access_certficates_last_updated', self::$cache_group );
 	}
 
 	/**
@@ -212,6 +243,19 @@ class Plugin {
 			return in_array( $aud, CF_ACCESS_AUD, true );
 		} elseif ( is_string( $aud ) ) {
 				return CF_ACCESS_AUD === $aud;
+		}
+		return false;
+	}
+
+	/**
+	 * Validate New User Role
+	 *
+	 * @param string $role The role to validate.
+	 * @return string
+	 */
+	protected function validate_new_user_role( $role ) {
+		if ( in_array( $role, get_editable_roles(), true ) ) {
+			return $role;
 		}
 		return false;
 	}
