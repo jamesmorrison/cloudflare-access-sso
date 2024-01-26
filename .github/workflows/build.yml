@@ -1,8 +1,11 @@
 name: Run Build Process
 on:
+  pull_request:
+    branches:
+      - trunk
   push:
     branches:
-      - master # Change to your branch
+      - trunk
 
 jobs:
   build:
