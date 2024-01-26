@@ -22,9 +22,28 @@
     "php": ">=8.0",
     "firebase/php-jwt": "^6.8"
   },
+  "require-dev": {
+    "wp-coding-standards/wpcs": "^3.0.0",
+    "roave/security-advisories": "dev-latest"
+  },
   "autoload": {
     "psr-4": {
       "CloudflareAccessSSO\\": "includes/classes/"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
+      "phpcs --config-set default_standard WordPress-Extra"
+    ],
+    "post-update-cmd": [
+      "phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs",
+      "phpcs --config-set default_standard WordPress-Extra"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }
