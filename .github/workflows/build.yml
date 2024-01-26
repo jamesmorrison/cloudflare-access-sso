@@ -40,5 +40,4 @@ jobs:
         name: artifact
         path: .
         if-no-files-found: error
-        retention-days: 7
         overwrite: true
