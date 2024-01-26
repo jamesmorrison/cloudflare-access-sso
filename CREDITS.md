@@ -15,4 +15,4 @@ Thank you to all the people who have already contributed to this repository via 
 ## Libraries
 
 The following software libraries are utilized in this repository:
-- N/A
+- [PHP JWT](https://github.com/firebase/php-jwt)

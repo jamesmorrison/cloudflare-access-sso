@@ -1,7 +1,7 @@
 {
   "name": "jamesmorrison/cloudflare-access-sso",
   "description": "Facilitates SSO login to WordPress via Cloudflare Access.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "wordpress-plugin",
   "homepage": "https://james.morrison.uk/plugins/cloudflare-access-sso/",
   "readme": "./readme.md",
