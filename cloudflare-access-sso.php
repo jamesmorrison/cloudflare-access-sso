@@ -10,7 +10,7 @@
  *
  * Plugin Name: Cloudflare Access SSO
  * Description: Facilitates automatic login to WordPress when domain is protected with Cloudflare Access
- * Version:     1.0.3
+ * Version:     1.0.4
  * Plugin URI:  https://github.com/jamesmorrison/cloudflare-access-sso
  * Author:      James Morrison
  * Author URI:  https://jamesmorrison.uk/
@@ -32,6 +32,13 @@
 
 // Security check
 defined( 'ABSPATH' ) || exit;
+
+// Useful global constants
+define( 'CF_ACCESS_SSO_PLUGIN_VERSION', '1.0.4' );
+define( 'CF_ACCESS_SSO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+define( 'CF_ACCESS_SSO_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'CF_ACCESS_SSO_PLUGIN_INC', CF_ACCESS_SSO_PLUGIN_PATH . 'includes/' );
+define( 'CF_ACCESS_GITHUB_URL', 'https://github.com/jamesmorrison/cloudflare-access-sso' );
 
 // The Cloudflare Team Name is required
 if ( ! defined( 'CF_ACCESS_TEAM_NAME' ) ) {
@@ -66,13 +73,6 @@ if ( ! defined( 'CF_ACCESS_CREATE_ACCOUNT' ) ) {
 if ( ! defined( 'CF_ACCESS_NEW_USER_ROLE' ) ) {
 	define( 'CF_ACCESS_NEW_USER_ROLE', 'subscriber' );
 }
-
-// Useful global constants
-define( 'CF_ACCESS_SSO_PLUGIN_VERSION', '1.0.3' );
-define( 'CF_ACCESS_SSO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'CF_ACCESS_SSO_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-define( 'CF_ACCESS_SSO_PLUGIN_INC', CF_ACCESS_SSO_PLUGIN_PATH . 'includes/' );
-define( 'CF_ACCESS_GITHUB_URL', 'https://github.com/jamesmorrison/cloudflare-access-sso' );
 
 // Load plugin classes
 if ( ! file_exists( CF_ACCESS_SSO_PLUGIN_PATH . 'vendor/autoload.php' ) ) {

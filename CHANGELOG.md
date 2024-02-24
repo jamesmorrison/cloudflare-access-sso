@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](http://keepachangelog.com/), and will adhere to [Semantic Versioning](http://semver.org/).
 
+## [1.0.4] - 2024-02-24
+- Set constant before calling `CF_ACCESS_GITHUB_URL`.
+
 ## [1.0.3] - 2024-01-26
 - Added constant `(bool)` `CF_ACCESS_CREATE_ACCOUNT`: whether an account should be created when authenticated through Cloudflare
 - Added constant `(string)` `CF_ACCESS_NEW_USER_ROLE`: the new user role; defaults to subscriber

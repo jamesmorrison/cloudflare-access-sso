@@ -1,7 +1,7 @@
 {
   "name": "jamesmorrison/cloudflare-access-sso",
   "description": "Facilitates SSO login to WordPress via Cloudflare Access.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "wordpress-plugin",
   "homepage": "https://james.morrison.uk/plugins/cloudflare-access-sso/",
   "readme": "./readme.md",
@@ -25,6 +25,11 @@
   "autoload": {
     "psr-4": {
       "CloudflareAccessSSO\\": "includes/classes/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }
