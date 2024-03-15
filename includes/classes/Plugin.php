@@ -112,8 +112,8 @@ class Plugin {
 							$user = get_user_by( 'id', $user_id );
 
 							// Add user meta to indicate that the user was created by Cloudflare Access SSO.
-							update_user_meta( $user_id, 'cf_access_sso_created', true );
-							update_user_meta( $user_id, 'cf_access_sso_created_at', time() );
+							update_user_meta( $user->ID, 'cf_access_sso_created', true );
+							update_user_meta( $user->ID, 'cf_access_sso_created_at', time() );
 						}
 					}
 
@@ -128,12 +128,25 @@ class Plugin {
 						}
 
 						// Set the last login time.
-						update_user_meta( $user_id, 'cf_access_sso_last_login', time() );
+						update_user_meta( $user->ID, 'cf_access_sso_last_login', time() );
 
 						wp_set_auth_cookie( $user->ID );
 						wp_set_current_user( $user->ID );
 						do_action( 'wp_login', $user->name, $user );
-						wp_safe_redirect( esc_url( admin_url() ) );
+
+						// Get the requested redirect URL.
+						$redirect_to = filter_input( INPUT_GET, 'redirect_to', FILTER_SANITIZE_URL );
+
+						// $redirect_to is set by the login page, but not always.
+						// Value here will be false if the filter fails (input is invalid) or null if the input is not set.
+						if ( false === $redirect_to || null === $redirect_to ) {
+							$redirect_to = admin_url();
+						}
+
+						// Try redirecting to the requested URL, or the admin URL if it fails.
+						if ( false === wp_safe_redirect( esc_url( $redirect_to ) ) ) {
+							wp_safe_redirect( admin_url() );
+						}
 						exit;
 					}
 				}
