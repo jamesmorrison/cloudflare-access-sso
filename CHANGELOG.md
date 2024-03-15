@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file, per [the Keep a Changelog standard](http://keepachangelog.com/), and will adhere to [Semantic Versioning](http://semver.org/).
 
+## [1.0.6] - 2024-03-15
+- Fixed: update version in composer
+
 ## [1.0.5] - 2024-03-15
 - Fixed: post login redirect to the original URL requested
 
