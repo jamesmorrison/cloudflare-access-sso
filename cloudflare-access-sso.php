@@ -10,7 +10,7 @@
  *
  * Plugin Name: Cloudflare Access SSO
  * Description: Facilitates automatic login to WordPress when domain is protected with Cloudflare Access
- * Version:     1.0.5
+ * Version:     1.0.6
  * Plugin URI:  https://github.com/jamesmorrison/cloudflare-access-sso
  * Author:      James Morrison
  * Author URI:  https://jamesmorrison.uk/
@@ -34,7 +34,7 @@
 defined( 'ABSPATH' ) || exit;
 
 // Useful global constants
-define( 'CF_ACCESS_SSO_PLUGIN_VERSION', '1.0.5' );
+define( 'CF_ACCESS_SSO_PLUGIN_VERSION', '1.0.6' );
 define( 'CF_ACCESS_SSO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'CF_ACCESS_SSO_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CF_ACCESS_SSO_PLUGIN_INC', CF_ACCESS_SSO_PLUGIN_PATH . 'includes/' );
